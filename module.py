@@ -213,6 +213,7 @@ class Bmp:
 
     def save(self, bmpx=None):
         if bmpx is None:
+            self.handler.seek(0)
             self.handler.write(self.bytes())
         elif isinstance(bmpx, str):
             with open(bmpx, 'wb+') as new_bmp:
