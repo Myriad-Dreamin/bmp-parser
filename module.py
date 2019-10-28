@@ -160,16 +160,16 @@ class Bmp:
         # will not change
         # self.bmp_header.offset = None
 
-        self.height = len(self.content)
-        if self.height != 0:
-            self.width = len(self.content[0])
+        self.dib_header.height = len(self.content)
+        if self.dib_header.height != 0:
+            self.dib_header.width = len(self.content[0])
         else :
-            self.width = 0
+            self.dib_header.width = 0
         row_size = (((self.dib_header.width * self.dib_header.bits) + 31) >> 5) << 2
 
         self.head_size = 40
         if self.dib_header.mode == Bmp.BMPMode.BI_RGB.value:
-            self.raw_size = row_size * self.height
+            self.raw_size = row_size * self.dib_header.height
             self.bmp_header.size = self.bmp_header.offset + self.raw_size
         else:
             raise ValueError("we have not supported bmp mode now")
