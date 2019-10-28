@@ -92,10 +92,10 @@ class Bmp:
         if len(self.body) == 0:
             raise ValueError('empty file is bad bmp format, use create() function to make a new bmp')
 
-        if self.body[0] == ord(b'B'):
-            self.endian = Bmp.LittleEndian()
-        else:
-            self.endian = Bmp.BigEndian()
+        # if self.body[0] == ord(b'B'):
+        self.endian = Bmp.LittleEndian()
+        # else:
+        #      self.endian = Bmp.BigEndian()
 
         self.bmp_header = Bmp.BMPHeader(**Bmp.bh(*struct.unpack_from(self.endian.header_fmt, self.body, 0))._asdict())
 
@@ -224,3 +224,6 @@ class Bmp:
     @staticmethod
     def create():
         raise Exception("todo")
+
+
+
