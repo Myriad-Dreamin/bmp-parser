@@ -4,8 +4,9 @@ from collections import namedtuple
 from enum import Enum
 from math import sin
 
+
 def nibble_hit(b):
-    x, c = 0, len(b) * 2
+    x, c = 0, len(b)
     while x < c:
         yield (b[x] & 0xf0) >> 4
         yield b[x] & 0xf
@@ -17,7 +18,8 @@ def nibble_fee(b):
         raise ValueError("odd length of nibbles")
     x = 0
     while x < len(b):
-        yield b[x] << 4 | b[x]
+        print(b[x], b[x+1])
+        yield b[x] << 4 | b[x+1]
         x += 2
 
 
@@ -89,6 +91,7 @@ class Bmp:
     def __init__(self, handler):
         self.handler = handler
         self.body = bytearray(handler.read())
+        print(len(self.body), self.body.hex())
         if len(self.body) == 0:
             raise ValueError('empty file is bad bmp format, use create() function to make a new bmp')
 
@@ -119,7 +122,7 @@ class Bmp:
             self.content = [
                 (lambda renamed_row: [next(renamed_row) for _ in range(self.dib_header.width)])(nibble_hit(row))
                 for row in [
-                    self.body[self.bmp_header.offset:][i:i + row_size]
+                    self.body[self.bmp_header.offset:][i * row_size:i * row_size + row_size]
                     for i in range(self.dib_header.height)]
             ]
         elif (self.dib_header.bits & 7) == 0:
@@ -169,8 +172,8 @@ class Bmp:
 
         self.head_size = 40
         if self.dib_header.mode == Bmp.BMPMode.BI_RGB.value:
-            self.raw_size = row_size * self.dib_header.height
-            self.bmp_header.size = self.bmp_header.offset + self.raw_size
+            self.dib_header.raw_size = row_size * self.dib_header.height
+            self.bmp_header.size = self.bmp_header.offset + self.dib_header.raw_size
         else:
             raise ValueError("we have not supported bmp mode now")
 
