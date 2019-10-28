@@ -2,7 +2,6 @@
 import struct
 from collections import namedtuple
 from enum import Enum
-from math import sin
 
 
 def nibble_hit(b):
@@ -18,7 +17,6 @@ def nibble_fee(b):
         raise ValueError("odd length of nibbles")
     x = 0
     while x < len(b):
-        print(b[x], b[x+1])
         yield b[x] << 4 | b[x+1]
         x += 2
 
@@ -91,7 +89,6 @@ class Bmp:
     def __init__(self, handler):
         self.handler = handler
         self.body = bytearray(handler.read())
-        print(len(self.body), self.body.hex())
         if len(self.body) == 0:
             raise ValueError('empty file is bad bmp format, use create() function to make a new bmp')
 
